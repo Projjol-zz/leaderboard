@@ -17,24 +17,10 @@ var leaderboard = {};
     } else return "";
   }
 
-  leaderboard.bugLinksOf = function (email) {
-    if (email) {
-      return 'target="_blank" href="https://bugzilla.mozilla.org/' +
-        'buglist.cgi?quicksearch=ALL%20assignee%3A' + email + '"';
+  leaderboard.bugLinksOf = function (nick) {
+    if (nick) {
+      return 'target="_blank" href="https://github.com/' + nick + '"';
     } else return "";
-  }
-
-  leaderboard.accessLevel = function (access) {
-    switch(access) {
-      case 1:
-        return '<span class="label label-info">Level 1</span>';
-      case 2:
-        return '<span class="label label-warning">Level 2</span>';
-      case 3:
-        return '<span class="label label-success">Level 3</span>';
-      default:
-        return '<span class="label label-default">Level 0</span>';
-    }
   }
 
   leaderboard.sortResults = function () {
@@ -57,34 +43,4 @@ var leaderboard = {};
     }
   }
 
-  $.ajax({
-    url: "http://devs.mozillaindia.org/stats/india.json"
-  }).done(function (data) {
-    var dom = "";
-
-    // @TODO:
-    // 0. Turn this into a for..of loop
-    // 1. Use arrow-function for components' weight
-    for (var i in data) {
-      var item = data[i];
-
-      if (item.bugzilla.fixed) dom += '<tr>' +
-        '<td><img class="avatar" src="http://www.gravatar.com/avatar/' + item.gravatar + '?s=48"></td>' +
-        '<td><a href="mailto:' + item.email + '">' + item.name + '</a></td>' +
-        '<td align="center"><a ' + leaderboard.bugLinksOf(item.email) + '>' +
-        '<span class="badge assigned">' + item.bugzilla.assigned + '</span></a></td>' +
-        '<td align="center"><span class="badge fixed">' + item.bugzilla.fixed + '</span></td>' +
-        '<td align="center">' + leaderboard.accessLevel(item.level) + '</td>' +
-        '<td align="right" class="component">' + leaderboard.mostActiveOf(item.components) + '</td>' +
-        '</tr>';
-    }
-
-    // @TODO: throw this DOM-sorting in the gutter & wash hands...
-    // Sort the stats.json data itself, before putting in the DOM.
-    $("#list").append(dom);
-    leaderboard.sortResults();
-
-  }).fail(function (error) {
-    console.log(error);
-  });
-})();
+  
